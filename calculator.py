@@ -1,3 +1,5 @@
+import tkinter as tk
+
 # Simple Calculator
 
 #function for addition
@@ -18,53 +20,73 @@ def divide(x, y):
         return "Error: Division by zero"
     else:
         return round(x/y, 2)
-
-#This defines the main function
-def main():
-  print("Welcome to the calculator!")
-
-  while True:
-    #Initialize num1 and num2 before the try block
-    num1 = None
-    num2 = None
-
-    while True:
-     try:
-        #Ask user for input
-        num1 = float(input("Enter first number: "))
-        num2 = float(input("Enter second number: "))
-        break
-     except ValueError:
-        print("Invalid input. Please enter a number.")
-        
     
-    #Inner loop for operation choice
-    operation = None
-    while True:
-    #Ask the user to choose an operation
-            operation = input("Choose an operation (1. Add, 2. Subtract, 3. Multiply, 4. Divide): ")
-            if operation in ['1', '2', '3', '4']:
-                break #Valid choice, break out of the inner loop
-            else:
-                print("Invalid choice. Please enter a valid operation number (1, 2, 3, 4).")
-       
-    if operation == '1':
+# Function to perform calculation
+def perform_calculation(operation):
+    try:
+        num1 = float(entry_num1.get())
+        num2 = float(entry_num2.get())
+        if operation == 'add':
             result = add(num1, num2)
-    elif operation == '2':
+        elif operation == 'subtract':
             result = subtract(num1, num2)
-    elif operation == '3':
+        elif operation == 'multiply':
             result = multiply(num1, num2)
-    elif operation == '4':
+        elif operation == 'divide':
             result = divide(num1, num2)
-    else:
-            result = "Invalid Input"
+        label_result.config(text="Result: " + str(result))
+    except ValueError:
+        label_result.config(text="Error: Invalid input")
 
-    #Print the result
-    print("Result: ", result)
+# Function to clear inputs and result
+def clear_all():
+    entry_num1.delete(0, tk.END)
+    entry_num2.delete(0, tk.END)
+    label_result.config(text="")
 
-    another_calculation = input("Do you want to perform another calculation? (yes/no): ").lower()
-    if another_calculation != 'yes':
-        break
+# Function to create GUI
+def create_gui():
+    root = tk.Tk()
+    root.title("Simple Calculator")
+
+    global entry_num1, entry_num2, label_result
+
+    entry_num1 = tk.Entry(root)
+    entry_num1.grid(row=0, column=1)
+
+    entry_num2 = tk.Entry(root)
+    entry_num2.grid(row=1, column=1)
+
+    label_num1 = tk.Label(root, text="Enter number 1:")
+    label_num1.grid(row=0, column=0)
+
+    label_num2 = tk.Label(root, text="Enter number 2:")
+    label_num2.grid(row=1, column=0)
+
+    button_add = tk.Button(root, text="Add", command=lambda: perform_calculation('add'))
+    button_add.grid(row=2, column=0)
+
+    button_subtract = tk.Button(root, text="Subtract", command=lambda: perform_calculation('subtract'))
+    button_subtract.grid(row=2, column=1)
+
+    button_multiply = tk.Button(root, text="Multiply", command=lambda: perform_calculation('multiply'))
+    button_multiply.grid(row=3, column=0)
+
+    button_divide = tk.Button(root, text="Divide", command=lambda: perform_calculation('divide'))
+    button_divide.grid(row=3, column=1)
+
+    button_clear = tk.Button(root, text="Clear", command=clear_all)
+    button_clear.grid(row=4, column=0, columnspan=2)
+
+    label_result = tk.Label(root, text="")
+    label_result.grid(row=5, column=0, columnspan=2)
+
+    root.mainloop()
+    
+
+#Modified main function for GUI integration
+def main():
+    create_gui()
 
 #this checks if the script is run directly and then calls the function
 if __name__ == "__main__":
